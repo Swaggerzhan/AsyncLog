@@ -7,11 +7,14 @@
 #include <cassert>
 #include <fstream>
 
+#ifdef DEBUG
+
 // for debug
 #include <iostream>
-
 using std::cout;
 using std::endl;
+
+#endif
 
 
 AppendFile::AppendFile(std::string filename)
@@ -20,11 +23,13 @@ AppendFile::AppendFile(std::string filename)
 {
   assert(fp_);
   ::setbuffer(fp_, buffer_, sizeof buffer_);
-  //cout << "create file at: " << filename.c_str() << endl;
 }
 
 AppendFile::~AppendFile() {
   fflush();
+#ifdef DEBUG
+  cout << "total write: " << writtenBytes_ << endl;
+#endif
   ::fclose(fp_);
 }
 
@@ -52,9 +57,6 @@ void AppendFile::fflush() {
   ::fflush(fp_);
 }
 
-
 off_t AppendFile::writtenBytes() const {
   return writtenBytes_;
 }
-
-

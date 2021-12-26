@@ -6,36 +6,40 @@
 #define ASYNCLOG_ASYNCLOG_H
 
 #include "Disruptor.h"
-#include "AppendFile.h"
+#include "LogFile.h"
 #include <thread>
 
-#define LOG_LINE_SIZE 128
 
 typedef struct {
-  char data[LOG_LINE_SIZE];
+  char data[128];
   int len;
 }LogBuffer;
 
+
 class AsyncLog {
 public:
-  AsyncLog();
+  AsyncLog(const std::string& basename);
   ~AsyncLog();
 
   void append(const char* data, int len);
 
 private:
   void start();
+  void stop();
   void persist();
 
 private:
   Disruptor<LogBuffer> buffer_;
-  AppendFile logFile_;
+  LogFile logFile_;
 
-  bool running_;
+  std::atomic<bool> running_;
 
 
   // for debug
   long start_;
+
+  AtomicInt64 totalLog_;
+  AtomicInt64 persistLog_;
 
 };
 

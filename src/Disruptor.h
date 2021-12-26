@@ -7,7 +7,7 @@
 
 
 #include "Atomic.h"
-
+#include <thread>
 #include <iostream>
 
 using std::endl;
@@ -72,6 +72,7 @@ public:
     int64_t seq = readCursor_.add_fetch();
     while ( seq > commitWriteCursor_.getValue() ){
       // spin
+      std::this_thread::yield();
     }
     return seq;
   }
