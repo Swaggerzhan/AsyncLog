@@ -14,8 +14,12 @@ cmake -DCMAKE_INSTALL_PREFIX=/安装路径
 #include "include/Log.h"
 
 int main() {
+    LOG_INIT("logFilebaseName");
+    
     Log(INFO) << "this is Log line";
     Log(DEBUG) << "this is another Log line";
+    
+    LOG_EXIT();
 }
 ```
 

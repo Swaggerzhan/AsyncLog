@@ -9,6 +9,10 @@
 
 #define LOG_BUFFER_SIZE 128
 
+
+void LOG_INIT(std::string basename="log");
+void LOG_EXIT();
+
 class AsyncLog;
 
 enum LEVEL{
@@ -44,12 +48,12 @@ private:
   template<typename T>
   void formatInteger(T v);
 
-  static void LogInit();
-  static AsyncLog* ins();
+  //static void LogInit();
+  //static AsyncLog* ins();
 
 private:
 
-  static AsyncLog* asyncLog;
+  //static AsyncLog* asyncLog;
   static const int kMaxNumericSize = 48;
 
 

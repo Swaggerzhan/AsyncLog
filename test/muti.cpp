@@ -3,6 +3,7 @@
 #include "src/Atomic.h"
 #include <unistd.h>
 #include <thread>
+#include <cassert>
 
 #include "src/Log.h"
 
@@ -47,7 +48,7 @@ void thread4() {
 
 
 int main() {
-
+  LOG_INIT();
   long start = TimeStampDebug::Now();
   std::thread t1(thread1);
   std::thread t2(thread2);
@@ -60,6 +61,7 @@ int main() {
   long end = TimeStampDebug::Now();
   TimeStampDebug::diff(start, end);
   cout << "Log Num: " << count.getValue() << endl;
+  LOG_EXIT();
   return 0;
 
 }

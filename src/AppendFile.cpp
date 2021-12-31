@@ -16,7 +16,6 @@ using std::endl;
 
 #endif
 
-
 AppendFile::AppendFile(std::string filename)
         : fp_(::fopen(filename.c_str(), "ae"))
         , writtenBytes_(0)

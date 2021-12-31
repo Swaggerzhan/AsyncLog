@@ -6,6 +6,8 @@
 #include "AsyncLog.h"
 #include <sys/time.h>
 
+#include <utility>
+
 const char digits[] = "9876543210123456789";
 const char* zero = digits + 9;
 
@@ -14,23 +16,38 @@ const char* Log::kDEBUG = "[DEBUG]";
 const char* Log::kERROR = "[ERROR]";
 const char* Log::kFATAL = "[FATAL]";
 
-AsyncLog* Log::asyncLog = nullptr;
-static pthread_once_t logInit = PTHREAD_ONCE_INIT;
+AsyncLog* asyncLog = nullptr;
+//TODO: safe quit when main thread exit
+std::string basename;
 
+static pthread_once_t logInit = PTHREAD_ONCE_INIT;
+void LogInit() {
+  asyncLog = new AsyncLog(basename);
+}
 
 // for time
 __thread static char stringTimeBuf[128];
 __thread static time_t storeTime = 0;
 
-
-AsyncLog* Log::ins() {
+// for log init
+void LOG_INIT(std::string name) {
+  basename = std::move(name);
   pthread_once(&logInit, LogInit);
-  return asyncLog;
 }
 
-void Log::LogInit(){
-  asyncLog = new AsyncLog("test");
+void LOG_EXIT() {
+  delete asyncLog;
 }
+
+
+//AsyncLog* Log::ins() {
+//  pthread_once(&logInit, LogInit);
+//  return asyncLog;
+//}
+
+//void Log::LogInit(){
+//  asyncLog = new AsyncLog("test");
+//}
 
 template<typename T>
 size_t convert(char buf[], T value)
@@ -94,8 +111,8 @@ Log::~Log() {
     memcpy(current(), "\n", 1);
     add(1);
   }
-  assert( ins() != nullptr );
-  ins()->append(buffer_, written_);
+  assert( asyncLog != nullptr );
+  asyncLog->append(buffer_, written_);
 }
 
 

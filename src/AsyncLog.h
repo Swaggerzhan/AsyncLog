@@ -25,7 +25,7 @@ public:
 
 private:
   void start();
-  void stop();
+  void stop_and_join();
   void persist();
 
 private:
@@ -33,13 +33,14 @@ private:
   LogFile logFile_;
 
   std::atomic<bool> running_;
-
+  std::thread threads_;
 
   // for debug
+#ifdef DEBUG
   long start_;
-
   AtomicInt64 totalLog_;
   AtomicInt64 persistLog_;
+#endif
 
 };
 
